@@ -45,9 +45,7 @@ function Install-WSL {
     wsl --install -d Ubuntu
     wsl --set-default-version 2
     wsl --set-version Ubuntu 2
-    Write-Host "Ubuntu installation complete. Please restart your computer."
-    Restart-Computer
-    exit
+    Write-Host "Ubuntu installation complete."
 }
 
 # Function to install Docker
@@ -67,7 +65,13 @@ function Install-DockerComposeInUbuntu {
 }
 
 function Run-Docker-Compose {
-    $dockerComposeFilePath = "..\docker-compose.yml"  # Specify the custom path
+    $dockerComposeFilePath = Join-Path $PSScriptRoot "..\docker-compose.yml"  # Specify the custom path one directory back
+    $dockerComposeFilePath = Convert-Path $dockerComposeFilePath
+    Write-Host "dockerComposeFilePath: $dockerComposeFilePath"
+
+    # Convert Windows path to WSL path using wsl command
+    $wslDockerComposeFilePath = wsl -e bash -c "wslpath -a '$dockerComposeFilePath'"
+    Write-Host "wslDockerComposeFilePath: $wslDockerComposeFilePath"
 
     if (Test-Path $dockerComposeFilePath) {
         Write-Host "docker-compose.yml found. Pulling images and starting containers..."
@@ -77,15 +81,14 @@ function Run-Docker-Compose {
 
         # Run docker-compose with the specified file path inside Ubuntu (WSL)
         Write-Host "Running docker-compose inside Ubuntu..."
-        wsl -d Ubuntu -- sudo docker-compose -f $dockerComposeFilePath pull
-        wsl -d Ubuntu -- sudo docker-compose -f $dockerComposeFilePath up -d
+        wsl -d Ubuntu -- sudo docker-compose -f "$wslDockerComposeFilePath" pull
+        wsl -d Ubuntu -- sudo docker-compose -f "$wslDockerComposeFilePath" up -d
         Write-Host "Containers started successfully."
     } else {
         Write-Host "docker-compose.yml not found at the specified path!"
         exit 1
     }
 }
-
 
 # Function to check if Virtualization is enabled in BIOS (for Hyper-V and Virtual Platform)
 function Check-VirtualizationEnabled {
@@ -105,19 +108,13 @@ function Enable-HyperVAndVirtualPlatform {
     dism.exe /Online /Enable-Feature /All /FeatureName:Microsoft-Hyper-V-All /LimitAccess
     dism.exe /Online /Enable-Feature /All /FeatureName:VirtualMachinePlatform /LimitAccess
     Write-Host "Hyper-V and Virtual Machine Platform enabled. Restarting the system..."
-    Restart-Computer
-    exit
 }
 
     
 if (-Not (Check-DockerInstalled)) {
     # Main script execution
-    $ubuntuInstalled = wsl --list --verbose | Select-String -Pattern "Ubuntu"
-    if ($ubuntuInstalled) {
-        Write-Host "Ubuntu is installed for WSL."
-    } else {
-        Install-WSL
-    }
+    Install-WSL
+
     if (-Not (Check-VirtualizationEnabled)) {
         Enable-HyperVAndVirtualPlatform
     }
