@@ -39,3 +39,7 @@ After your PC reboots then open the docker desktop app
 5) Open an admin powershell prompt again and go back to C:\Anti-TimeSink\Windows and execute the install script again
    ``` .\install_docker.ps1 ```
 ### Linux/MacOS
+1) Make the sript executable bu running this command:
+   ```chmod +x install_docker```
+
+2) Execute the command to start the containers: ./install_docker.sh

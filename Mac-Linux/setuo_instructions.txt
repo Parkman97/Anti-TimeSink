@@ -1,3 +1,0 @@
-1) download repo 
-2) Make the sript executbale: chmod +x setup.sh
-3) Execute the command to start the containers: ./setup.sh
