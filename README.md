@@ -39,7 +39,16 @@ After your PC reboots then open the docker desktop app
 5) Open an admin powershell prompt again and go back to C:\Anti-TimeSink\Windows and execute the install script again
    ``` .\install_docker.ps1 ```
 ### Linux/MacOS
-1) Make the sript executable bu running this command:
-   ```chmod +x install_docker```
+1) Make the sript executable by running this command:
+   ```chmod +x install_docker.sh```
 
-2) Execute the command to start the containers: ./install_docker.sh
+2) Execute the command to start the containers: 
+   ```./install_docker.sh```
+
+
+### All Devices
+Once you have the Anti-TimeSink application running then all thats left is to take the IP address that is shown in the terminal and update your router DNS settings to use this IP address instead. An example is below of how to update your router to point to the application. Your router may be different so look at the user manual for your specefic one.
+
+![Example DNS update in router](./media/updateDNS.jpg)
+
+Once this last step is complete then you are all finished setting up the Anti-TimeSink tool. Have fun!

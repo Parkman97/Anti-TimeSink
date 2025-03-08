@@ -98,6 +98,8 @@ get_dnsmasq_ip() {
     echo "dnsmasq container IP address: $DNSMASQ_IP"
 }
 
+# Uncomment the next section if you are doing this to one device instead of the router
+
 # # Function to update /etc/resolv.conf with the dnsmasq container IP on Linux
 # update_resolv_conf_linux() {
 #     echo "Updating /etc/resolv.conf with dnsmasq container IP..."
